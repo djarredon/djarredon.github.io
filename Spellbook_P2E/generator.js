@@ -111,6 +111,7 @@ var spellbook = function() {
         }
         strout += ""
           + "<b>" + curr_spell.name
+          // + "</b> (" + curr_spell.school + ")"
           + "</b> (" + curr_spell.system.traits.value + ")"
           + "<br>"
           ;
@@ -138,7 +139,8 @@ var randSpell = function(spell_level) {
     var emergency_shutoff = 0;
     while (!found && emergency_shutoff < 20) {
       var to_return = spell_list_by_level[spell_level][Math.floor(Math.random() * spell_list_by_level[spell_level].length)];
-      if (to_return.system.traditions && to_return.system.traditions.includes("arcane"))
+      // if (to_return.class && to_return.class.includes(str_class))
+      if (to_return.system.traditions && to_return.system.traditions.value.includes("arcane"))  
         found = true;
       ++emergency_shutoff;
     }
