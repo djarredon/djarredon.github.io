@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!-- 
+  Copyright 2023 Daniel J. Arredondo
+-->
+<html>
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <!-- Import Bootstrap -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Mobile friendly -->
+  <meta name="viewport" content="width=device-width, intial-scale=1, max-scale=1, user-scalable=no">
+
+  <style>
+    body {
+      margin: 0 3px;
+    }
+
+    p {
+      padding: 6px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .panel {
+      padding: 5px;
+    }
+
+    .flex-item {
+      flex-grow: 1;
+      margin: 4px;
+    }
+
+    .form-popup {
+      display: none;
+    }
+  </style>
+
+  <title>P2E Spellbook Generator</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <ol class="breadcrumb">
+          <li><a href="../index.html">Home</a></li>
+          <li class="active">P2E Spellbook Generator</li>
+        </ol>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a href="./index.html">
+              <h1>Spellbook Generator</h1>
+            </a>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <p>This tool creates a random spellbook for wizards in Pathfinder 2nd Edition. Select the class level of
+                the spellbook's owner and the source(s) that you want, and it will create a spellbook of random spells.
+              </p>
+              <!-- Choose level of wizard -->
+              <div class="flex-item">
+                <b>Class Level:</b>
+                <select id="class_level">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                  <option>7</option>
+                  <option>8</option>
+                  <option>9</option>
+                  <option>10</option>
+                  <option>11</option>
+                  <option>12</option>
+                  <option>13</option>
+                  <option>14</option>
+                  <option>15</option>
+                  <option>16</option>
+                  <option>17</option>
+                  <option>18</option>
+                  <option>19</option>
+                  <option>20</option>
+                </select>
+                <br><sub>Wizards begin with 6 level one spells and learn two more spells per level.</sub>
+              </div>
+
+              <!-- Choose School -->
+              <div class="flex-item">
+                <b>School:</b>
+                <select id="school">
+                  <option>None</option>
+                  <option>Abjuration</option>
+                  <option>Conjuration</option>
+                  <option>Divination</option>
+                  <option>Enchantment</option>
+                  <option>Evocation</option>
+                  <option>Illusion</option>
+                  <option>Necromancy</option>
+                  <option>Transmutation</option>
+                </select>
+                <br>
+                <sub>
+                  Ensures spellbook contains one or two spells per level of requested school.<br>
+                  Some schools only have one spell for a given level.<br>
+                  <b>Notice:</b> This menu option may be removed due to upcoming changes to P2E ruleset.
+                </sub>
+              </div>
+
+              <!-- Choose wealth level -->
+              <div class="flex-item">
+                <b>Wealth:</b>
+                <select id="wealth_level">
+                  <option>base</option> <!-- minimum number of spells -->
+                  <option>wealthy</option> <!-- +1 spell per level -->
+                  <option>rich</option> <!-- +2 -->
+                </select>
+                <br>
+                <sub>
+                  Base: minimum number of spells for level.<br>
+                  Wealthy: +1 spell per level.<br>
+                  Rich: +2 spells per level.
+                </sub>
+              </div>
+
+              <!-- Choose Rarity -->
+              <div class="flex-item">
+                <b>Rarity:</b>
+                <select id="rarity">
+                  <option>Common</option>
+                  <option>Uncommon</option>
+                  <option>Rare</option>
+                  <option>Unique</option>
+                </select>
+                <br>
+                <sub>
+                  Common is selected by default. Any other selection will include all rarities beneath it. <br>
+                  i.e., selecting "unique" will include spells of all rarities.
+                </sub>
+              </div>
+
+              <!-- Choose Source(s) -->
+              <div class="flex-item">
+                <b>Source(s):</b><br>
+                <button class="btn btn-default" type="button" onclick="openSources()"
+                  id="sourcesButton">Source(S)</button>
+
+                <br>
+                <sub>Select the source or sources from which to pull spells to generate your spellbook.</sub>
+                <br>
+                <sub>The Core Rulebook is selected by default.</sub>
+
+                <!-- popup form -->
+                <div class="form-popup" id="sourcesForm">
+                  <div class="panel panel-default">
+                    <input type="checkbox" id="source1" name="source1" value="Core" checked="true">
+                    <label for="source1">Core</label><br>
+                    <input type="checkbox" id="source2" name="source2" value="Advanced">
+                    <label for="source2">Advanced</label><br>
+                    <input type="checkbox" id="source3" name="source3" value="Pathfinder Lost Omens: Gods & Magic">
+                    <label for="source3">Pathfinder Lost Omens: Gods & Magic</label><br>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <button id="submit" type="button" class="btn btn-default">Generate</button>
+        </div>
+
+        <!-- Generated Spellbook -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2>Spellbook</h2>
+          </div>
+          <div class="panel-body" id="my_spells"></div>
+        </div>
+
+        <!-- All Spells section
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2>All Spells</h2>
+          </div>
+          <div class="panel-body" id="all_spells"></div>
+        </div>
+        -->
+
+        <script src="generator.js"></script>
+
+      </div>
+    </div>
+  </div>
+  <br><br>
+  <hr>
+  <p>Feel free to direct questions to <a href="https://www.reddit.com/user/Jackelking/">Jackelking</a> on Reddit.</p>
+  <footer>The text on this page is Open Game Content, and is licensed for public use under the terms of the <a
+      href="./license.html">Open Game License v1.0a</a>.</footer>
+  </div>
+  <br>
+
+  <script>
+    var toggleSources = true;
+    function openSources() {
+      if (toggleSources)
+        document.getElementById("sourcesForm").style.display = "block";
+      else
+        document.getElementById("sourcesForm").style.display = "none";
+
+      toggleSources = !toggleSources;
+    }
+  </script>
+
+</body>
+
+</html>
