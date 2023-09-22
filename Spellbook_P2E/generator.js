@@ -65,9 +65,10 @@ var spellbook = function() {
         ;
       // first two spells should be from school
       var school = $('#school').val().toLowerCase();
+      var rarity = $('#rarity').val().toLowerCase();
       for (var j = 0; j < spells_known[i]; ++j) {
         // get random spell for current
-        // spell level 'j'
+        // spell level 'i'
         var found = false;
         var curr_spell;
         // search for valid spell.
@@ -86,20 +87,32 @@ var spellbook = function() {
           if (!owned) {
             found = true;
           }
-          // check if spell is from school
-          /*
-          "traits": {
-              "rarity": "common",
-              "value": [
-                "polymorph",
-                "transmutation"
-              ]
-            }
-            ...
+
+          // check if rarity is allowed
+          switch (rarity) {
+            case "unique":
+              found = true;
+              break;
+            case "rare":
+              if (curr_spell.system.traits.rarity != "unique")
+                found = true;
+              break;
+            case "uncommon":
+              if (
+                curr_spell.system.traits.rarity == "uncommon"
+                || curr_spell.system.traits.rarity == "common"
+              )
+              found = true;
+              break;
+            case "common":
+            default:
+              if (curr_spell.system.traits.rarity == "common")
+                found = true;
+              break;
           }
-          */
+
+          // Check if we need more spells of the requested school
           if (school !== 'None') {
-            // if (j < 2 && curr_spell.school !== school) {
             if (j < 2 && !curr_spell.system.traits.value.includes(school)) {
               found = false;
             }
@@ -111,8 +124,8 @@ var spellbook = function() {
         }
         strout += ""
           + "<b>" + curr_spell.name
-          // + "</b> (" + curr_spell.school + ")"
           + "</b> (" + curr_spell.system.traits.value + ")"
+          + " (" + curr_spell.system.traits.rarity + ")"
           + "<br>"
           ;
       }
@@ -132,8 +145,6 @@ var spellbook = function() {
 // return json of random spell of given level
 var randSpell = function(spell_level) {
   if (all_spell_list) {
-    var str_class = "Wizard";
-
     var found = false;
     var to_return;
     var emergency_shutoff = 0;
