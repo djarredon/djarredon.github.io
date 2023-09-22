@@ -139,9 +139,8 @@ var randSpell = function(spell_level) {
     var emergency_shutoff = 0;
     while (!found && emergency_shutoff < 20) {
       var to_return = spell_list_by_level[spell_level][Math.floor(Math.random() * spell_list_by_level[spell_level].length)];
-      // if (to_return.class && to_return.class.includes(str_class))
-      if (to_return.system.traditions && to_return.system.traditions.value.includes("arcane"))  
-        found = true;
+      // if (to_return.system.traditions && to_return.system.traditions.value.includes("arcane"))  
+      found = true;
       ++emergency_shutoff;
     }
     return to_return;
@@ -193,7 +192,17 @@ $.getJSON("./json/P2ESpells.json", function(data) {
   console.log("Line 181");
 
   all_spell_list = data;
-  allSpells();
+  // allSpells();
+
+  spell_list_by_level[1] = [{}];
+  spell_list_by_level[2] = [{}];
+  spell_list_by_level[3] = [{}];
+  spell_list_by_level[4] = [{}];
+  spell_list_by_level[5] = [{}];
+  spell_list_by_level[6] = [{}];
+  spell_list_by_level[7] = [{}];
+  spell_list_by_level[8] = [{}];
+  spell_list_by_level[9] = [{}];
 
   for (var i in all_spell_list) {
     /*
@@ -205,50 +214,41 @@ $.getJSON("./json/P2ESpells.json", function(data) {
     }
     */
 
-    if (all_spell_list[i].system.level.value === 1) {
-      if (spell_list_by_level[1] === undefined)
-        spell_list_by_level[1] = [{}];
-      spell_list_by_level[1].push(all_spell_list[i]);
-    }
-    if (all_spell_list[i].system.level.value === 2) {
-      if (spell_list_by_level[2] === undefined)
-        spell_list_by_level[2] = [{}];
-      spell_list_by_level[2].push(all_spell_list[i]);
-    }
-    if (all_spell_list[i].system.level.value === 3) {
-      if (spell_list_by_level[3] === undefined)
-        spell_list_by_level[3] = [{}];
-      spell_list_by_level[3].push(all_spell_list[i]);
-    }
-    if (all_spell_list[i].system.level.value === 4) {
-      if (spell_list_by_level[4] === undefined)
-        spell_list_by_level[4] = [{}];
-      spell_list_by_level[4].push(all_spell_list[i]);
-    }
-    if (all_spell_list[i].system.level.value === 5) {
-      if (spell_list_by_level[5] === undefined)
-        spell_list_by_level[5] = [{}];
-      spell_list_by_level[5].push(all_spell_list[i]);
-    }
-    if (all_spell_list[i].system.level.value === 6) {
-      if (spell_list_by_level[6] === undefined)
-        spell_list_by_level[6] = [{}];
-      spell_list_by_level[6].push(all_spell_list[i]);
-    }
-    if (all_spell_list[i].system.level.value === 7) {
-      if (spell_list_by_level[7] === undefined)
-        spell_list_by_level[7] = [{}];
-      spell_list_by_level[7].push(all_spell_list[i]);
-    }
-    if (all_spell_list[i].system.level.value === 8) {
-      if (spell_list_by_level[8] === undefined)
-        spell_list_by_level[8] = [{}];
-      spell_list_by_level[8].push(all_spell_list[i]);
-    }
-    if (all_spell_list[i].system.level.value === 9) {
-      if (spell_list_by_level[9] === undefined)
-        spell_list_by_level[9] = [{}];
-      spell_list_by_level[9].push(all_spell_list[i]);
+    if (!(
+      all_spell_list[i].system
+      && all_spell_list[i].system.traditions 
+      && all_spell_list[i].system.traditions.value.includes("arcane")
+      ))
+      continue;
+
+    switch (all_spell_list[i].system.level.value) {
+      case 1:
+        spell_list_by_level[1].push(all_spell_list[i]);
+        break;
+      case 2:
+        spell_list_by_level[2].push(all_spell_list[i]);
+        break;
+      case 3:
+        spell_list_by_level[3].push(all_spell_list[i]);
+        break;
+      case 4:
+        spell_list_by_level[4].push(all_spell_list[i]);
+        break;
+      case 5:
+        spell_list_by_level[5].push(all_spell_list[i]);
+        break;
+      case 6:
+        spell_list_by_level[6].push(all_spell_list[i]);
+        break;
+      case 7:
+        spell_list_by_level[7].push(all_spell_list[i]);
+        break;
+      case 8:
+        spell_list_by_level[8].push(all_spell_list[i]);
+        break;
+      case 9:
+        spell_list_by_level[9].push(all_spell_list[i]);
+        break;
     }
   }
 } )
