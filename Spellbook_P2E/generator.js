@@ -64,7 +64,7 @@ var spellbook = function() {
         + "<h3>Rank " + i + " spells</h3>"
         ;
       // first two spells should be from school
-      var school = $('#school').val();
+      var school = $('#school').val().toLowerCase();
       for (var j = 0; j < spells_known[i]; ++j) {
         // get random spell for current
         // spell level 'j'
@@ -100,7 +100,7 @@ var spellbook = function() {
           */
           if (school !== 'None') {
             // if (j < 2 && curr_spell.school !== school) {
-            if (j < 2 && curr_spell.traits.value.includes(school)) {
+            if (j < 2 && !curr_spell.system.traits.value.includes(school)) {
               found = false;
             }
           }
