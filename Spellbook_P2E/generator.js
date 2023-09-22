@@ -58,14 +58,17 @@ var spellbook = function() {
     // each spell must be for the correct class,
     // and for the correct level
     var owned_spells;
+    var school = $('#school').val().toLowerCase();
+    var rarity = $('#rarity').val().toLowerCase();
+    var sources = $('#sourcesButton').val();
+
     strout += "<div class=\"row\">";
     for (var i = 1; i <= max_level; ++i) {
       strout += "<div class=\"flex-item\" id=\"div" + i + "\">"
         + "<h3>Rank " + i + " spells</h3>"
         ;
+
       // first two spells should be from school
-      var school = $('#school').val().toLowerCase();
-      var rarity = $('#rarity').val().toLowerCase();
       for (var j = 0; j < spells_known[i]; ++j) {
         // get random spell for current
         // spell level 'i'
@@ -87,6 +90,9 @@ var spellbook = function() {
           if (!owned) {
             found = true;
           }
+
+          // check if source is allowed
+          // curr_spell.system.source.value
 
           // check if rarity is allowed
           switch (rarity) {
@@ -150,7 +156,7 @@ var randSpell = function(spell_level) {
     var emergency_shutoff = 0;
     while (!found && emergency_shutoff < 20) {
       var to_return = spell_list_by_level[spell_level][Math.floor(Math.random() * spell_list_by_level[spell_level].length)];
-      if (to_return.name)
+      if (to_return.name && to_return.system)
         found = true;
       else
         console.log("An object, but not one of ours?" + to_return);
@@ -198,14 +204,12 @@ var allSpells = function() {
 // load spell list into json
 var all_spell_list;
 var spell_list_by_level = [];
+var all_source_books = [];
 
 // Get spells from https://github.com/foundryvtt/pf2e/tree/master/packs/spells
 
 $.getJSON("./json/P2ESpells.json", function(data) {
-  console.log("Line 181");
-
   all_spell_list = data;
-  // allSpells();
 
   spell_list_by_level[1] = [{}];
   spell_list_by_level[2] = [{}];
@@ -218,23 +222,22 @@ $.getJSON("./json/P2ESpells.json", function(data) {
   spell_list_by_level[9] = [{}];
 
   for (var i in all_spell_list) {
-    /*
-    "system": {
-      "level": {
-        "value": 5
-      },
-      ...
-    }
-    */
 
+    // validate spell before adding to lists
     if (!(
       all_spell_list[i].system
       && all_spell_list[i].system.traditions 
       && all_spell_list[i].system.traditions.value.includes("arcane")
       && all_spell_list[i].system.traits
       && all_spell_list[i].system.traits.value
+      && all_spell_list[i].system.source
+      && all_spell_list[i].system.source.value
       ))
       continue;
+    
+    // add source book of the spell
+    if (!all_source_books.includes(all_spell_list[i].system.source.value))
+      all_source_books.append(all_spell_list[i].system.source.value)
 
     switch (all_spell_list[i].system.level.value) {
       case 1:
