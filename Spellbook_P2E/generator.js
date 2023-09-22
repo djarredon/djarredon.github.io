@@ -102,18 +102,24 @@ var spellbook = function() {
             case "rare":
               if (curr_spell.system.traits.rarity != "unique")
                 found = true;
+              else
+                found = false;
               break;
             case "uncommon":
               if (
                 curr_spell.system.traits.rarity == "uncommon"
                 || curr_spell.system.traits.rarity == "common"
               )
-              found = true;
+                found = true;
+              else
+                found = false;
               break;
             case "common":
             default:
               if (curr_spell.system.traits.rarity == "common")
                 found = true;
+              else
+                found = false;
               break;
           }
 
@@ -237,7 +243,7 @@ $.getJSON("./json/P2ESpells.json", function(data) {
     
     // add source book of the spell
     if (!all_source_books.includes(all_spell_list[i].system.source.value))
-      all_source_books.append(all_spell_list[i].system.source.value)
+      all_source_books.push(all_spell_list[i].system.source.value)
 
     switch (all_spell_list[i].system.level.value) {
       case 1:
