@@ -218,6 +218,8 @@ $.getJSON("./json/P2ESpells.json", function(data) {
       all_spell_list[i].system
       && all_spell_list[i].system.traditions 
       && all_spell_list[i].system.traditions.value.includes("arcane")
+      && all_spell_list[i].system.traits
+      && all_spell_list[i].system.traits.value
       ))
       continue;
 
