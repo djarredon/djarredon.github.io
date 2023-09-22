@@ -150,8 +150,10 @@ var randSpell = function(spell_level) {
     var emergency_shutoff = 0;
     while (!found && emergency_shutoff < 20) {
       var to_return = spell_list_by_level[spell_level][Math.floor(Math.random() * spell_list_by_level[spell_level].length)];
-      // if (to_return.system.traditions && to_return.system.traditions.value.includes("arcane"))  
-      found = true;
+      if (to_return.name)
+        found = true;
+      else
+        console.log("An object, but not one of ours?" + to_return);
       ++emergency_shutoff;
     }
     return to_return;
