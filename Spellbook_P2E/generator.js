@@ -7,56 +7,51 @@ var spellbook = function() {
   var out = $('#my_spells');
   var strout = "<h2>Spellbook</h2>";
   // get level from input 
-  var class_level = $('#class_level').val();
-  var income_level = $('#wealth_level').val();
+  var level = $('#class_level').val();
+  var income = $('#wealth_level').val();
   // maximum level spells known, minimum 
   // number of spells known
-  var max_spell_level;	// integer for maximum level spell
+  var max_level;	// integer for maximum level spell
   var spells_known = [];	// array for storing 
   // spells of every level
   spells_known[0] = undefined;
-  if (class_level >= 1 && class_level <= 20) {
+  if (level >= 1 && level <= 20) {
     //spells_known = (level * 2) + 4;
-    if (class_level < 17)
-      max_spell_level = Math.ceil(class_level / 2);
+    if (level < 17)
+      max_level = Math.ceil(level / 2);
     else
-      max_spell_level = 9;
+      max_level = 9;
 
-    for (var i = 1; i <= max_spell_level; ++i) {
-      if (i == max_spell_level && class_level % 2 == 0)
+    for (var i = 1; i <= max_level; ++i) {
+      if (i == max_level && level % 2 == 0)
         spells_known[i] = 4;
-      else if (i == max_spell_level)
+      else if (i == max_level)
         spells_known[i] = 2;
-      if (i == 1 && class_level > 1)
+      if (i == 1 && level > 1)
         spells_known[i] = 8;
       else if (i == 1)
         spells_known[i] = 6;
-      if (i > 1 && i < max_spell_level)
+      if (i > 1 && i < max_level)
         spells_known[i] = 4;
     }
-    // TODO: Add Rank 10 spells
-    if (class_level > 18) {
-      if (class_level == 19)
+    if (level > 18) {
+      if (level == 19)
         spells_known[9] = 6;
       else
         spells_known[9] = 8;
     }
     // add in spells for wealth modifier
-    for (var i = 1; i <= max_spell_level; ++i) {
-      if (class_level % 2 == 0) {
-        if (income_level === 'rich')
+    for (var i = 1; i <= max_level; ++i) {
+      if (level % 2 == 0) {
+        if (income === 'rich')
           spells_known[i] += 2;
-        else if (income_level === 'wealthy')
+        if (income === 'wealthy')
           spells_known[i] += 1;
-        else if (income_level === 'poor')
-          spells_known[i] -= 0;
       }
-      if (income_level === 'rich')
+      if (income === 'rich')
         spells_known[i] += 2;
-      else if (income_level === 'wealthy')
+      if (income === 'wealthy')
         spells_known[i] += 1;
-      else if (income_level === 'poor')
-        spells_known[i] -= 1;
     }
 
     // now, pick random spells from the json.
@@ -68,7 +63,7 @@ var spellbook = function() {
     var sources = $('#sourcesButton').val();
 
     strout += "<div class=\"row\">";
-    for (var i = 1; i <= max_spell_level; ++i) {
+    for (var i = 1; i <= max_level; ++i) {
       strout += "<div class=\"flex-item\" id=\"div" + i + "\">"
         + "<h3>Rank " + i + " spells</h3>"
         ;
@@ -140,10 +135,13 @@ var spellbook = function() {
             owned_spells.push(curr_spell);
         }
         strout += ""
-          + "<b>" + curr_spell.name
-          + "</b> (" + curr_spell.system.traits.value + ")"
+          + "<div class='spell'>"
+          + "<b>" + curr_spell.name + "</b>"
+          + " (" + curr_spell.system.traits.value + ")"
           + " (" + curr_spell.system.traits.rarity + ")"
+          + "<div class='well'>" + curr_spell.system.source.value + "</div>"
           + "<br>"
+          + "</div>"
           ;
       }
       strout += "</div>";
