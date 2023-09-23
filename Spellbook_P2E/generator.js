@@ -124,7 +124,7 @@ var spellbook = function() {
           }
 
           // Check if we need more spells of the requested school
-          if (school !== 'None') {
+          if (school !== 'none') {
             if (j < 2 && !curr_spell.system.traits.value.includes(school)) {
               found = false;
             }
