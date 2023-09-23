@@ -57,10 +57,6 @@ var spellbook = function() {
     // now, pick random spells from the json.
     // each spell must be for the correct class,
     // and for the correct level
-    var owned_spells;
-    var school = $('#school').val().toLowerCase();
-    var rarity = $('#rarity').val().toLowerCase();
-    var sources = $('#sourcesButton').val();
 
     strout += "<div class=\"row\">";
     for (var i = 1; i <= max_level; ++i) {
@@ -79,6 +75,11 @@ var spellbook = function() {
         var quit = 0;
         while (!found) {
           curr_spell = randSpell(i);
+
+          if (validate_spell(curr_spell))
+            found = true;
+
+          /*
           var owned = false;
           if (!owned_spells) {
             owned_spells = [{}];
@@ -133,6 +134,8 @@ var spellbook = function() {
             found = true;
           if (found)
             owned_spells.push(curr_spell);
+          */
+
         }
         strout += ""
           + "<b>" + curr_spell.name
@@ -175,6 +178,69 @@ var randSpell = function(spell_level) {
       + "{\"level\": \"not\"},"
       + "{\"school\": \"loaded\"}]";
   }
+}
+
+var owned_spells;
+var validate_spell = function(spell) {
+    var school = $('#school').val().toLowerCase();
+    var rarity = $('#rarity').val().toLowerCase();
+    var sources = $('#sourcesButton').val();
+    var owned = false;
+ 
+    if (!owned_spells) {
+      owned_spells = [{}];
+    }
+    for (var key in owned_spells) {
+      if (owned_spells[key].name === curr_spell.name)
+        owned = true;
+    }
+    if (!owned) {
+      found = true;
+    }
+
+    // check if source is allowed
+    // curr_spell.system.source.value
+
+    // check if rarity is allowed
+    switch (rarity) {
+      case "unique":
+        found = true;
+        break;
+      case "rare":
+        if (curr_spell.system.traits.rarity != "unique")
+          found = true;
+        else
+          found = false;
+        break;
+      case "uncommon":
+        if (
+          curr_spell.system.traits.rarity == "uncommon"
+          || curr_spell.system.traits.rarity == "common"
+        )
+          found = true;
+        else
+          found = false;
+        break;
+      case "common":
+      default:
+        if (curr_spell.system.traits.rarity == "common")
+          found = true;
+        else
+          found = false;
+        break;
+    }
+
+    // Check if we need more spells of the requested school
+    if (school !== 'None') {
+      if (j < 2 && !curr_spell.system.traits.value.includes(school)) {
+        found = false;
+      }
+    }
+    if (quit++ > 100)
+      found = true;
+    if (found)
+      owned_spells.push(curr_spell);
+
 }
 
 $('#submit').on('click', function() {
