@@ -137,9 +137,12 @@ var spellbook = function() {
         strout += ""
           + "<div class='spell'>"
           + "<b>" + curr_spell.name + "</b>"
-          + " (" + curr_spell.system.traits.value + ")"
-          + " (" + curr_spell.system.traits.rarity + ")"
-          + "<div class='well'>" + curr_spell.system.source.value + "</div>"
+          + "<div class='well'>"
+          + "<b>Traits:</b> " + curr_spell.system.traits.value
+          + "<br><b>Rarity:</b> " + curr_spell.system.traits.rarity
+          + "<br><b>Source:</b> "+ curr_spell.system.source.value 
+          + "<br><br><b>Description:</b> " + curr_spell.system.description.value
+          + "</div>"
           + "<br>"
           + "</div>"
           ;
