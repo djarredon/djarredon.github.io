@@ -67,7 +67,6 @@ var spellbook = function() {
     // each spell must be for the correct class,
     // and for the correct level
     var school = $('#school').val().toLowerCase();
-    var rarity = $('#rarity').val().toLowerCase();
     var sources = $('#sourcesButton').val();
 
     strout += "<div class=\"row\">";
@@ -176,6 +175,7 @@ var validate_spell = function(spell) {
   // TODO: Source book checking here
 
   // check if rarity is allowed
+  var rarity = $('#rarity').val().toLowerCase();
   switch (rarity) {
     case "unique":
       found = true;
