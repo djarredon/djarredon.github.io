@@ -47,6 +47,8 @@ var spellbook = function() {
           spells_known[i] += 2;
         if (income === 'wealthy')
           spells_known[i] += 1;
+        else if (income_level === 'poor')
+          spells_known[i] -= 1;
       }
       if (income === 'rich')
         spells_known[i] += 2;
