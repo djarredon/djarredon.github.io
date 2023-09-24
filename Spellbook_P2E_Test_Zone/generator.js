@@ -47,8 +47,6 @@ var spellbook = function() {
           spells_known[i] += 2;
         if (income === 'wealthy')
           spells_known[i] += 1;
-        else if (income_level === 'poor')
-          spells_known[i] -= 1;
       }
       if (income === 'rich')
         spells_known[i] += 2;
@@ -139,9 +137,12 @@ var spellbook = function() {
         strout += ""
           + "<div class='spell'>"
           + "<b>" + curr_spell.name + "</b>"
-          + " (" + curr_spell.system.traits.value + ")"
-          + " (" + curr_spell.system.traits.rarity + ")"
-          + "<div class='well'>" + curr_spell.system.source.value + "</div>"
+          + "<div class='well'>"
+          + "<b>Traits:</b> " + curr_spell.system.traits.value
+          + "<br><b>Rarity:</b> " + curr_spell.system.traits.rarity
+          + "<br><b>Source:</b> "+ curr_spell.system.source.value 
+          + "<br><br><b>Description:</b> " + curr_spell.system.description.value
+          + "</div>"
           + "<br>"
           + "</div>"
           ;
