@@ -18,7 +18,7 @@ var spellbook = function() {
   var spells_known = [];	// array for storing 
   owned_spells = [{}];
   // spells of every level
-  spells_known[0] = undefined;
+  spells_known[0] = 10;
   if (level >= 1 && level <= 20) {
     //spells_known = (level * 2) + 4;
     if (level < 17)
@@ -70,10 +70,17 @@ var spellbook = function() {
     var sources = $('#sourcesButton').val();
 
     strout += "<div class=\"row\">";
-    for (var i = 1; i <= max_level; ++i) {
-      strout += "<div class=\"flex-item\" id=\"div" + i + "\">"
-        + "<h3>Rank " + i + " spells</h3>"
-        ;
+    for (var i = 0; i <= max_level; ++i) {
+      if (i == 0) {
+        strout += "<div class=\"flex-item\" id=\"div" + i + "\">"
+          + "<h3>Cantrips</h3>"
+          ;        
+      }
+      else {
+        strout += "<div class=\"flex-item\" id=\"div" + i + "\">"
+          + "<h3>Rank " + i + " spells</h3>"
+          ;
+      }
 
       // first two spells should be from school
       for (var j = 0; j < spells_known[i]; ++j) {
@@ -237,6 +244,7 @@ var all_source_books = [];
 $.getJSON("./json/P2ESpells.json", function(data) {
   all_spell_list = data;
 
+  spell_list_by_level[0] = [{}];
   spell_list_by_level[1] = [{}];
   spell_list_by_level[2] = [{}];
   spell_list_by_level[3] = [{}];
@@ -258,7 +266,6 @@ $.getJSON("./json/P2ESpells.json", function(data) {
       && all_spell_list[i].system.traits.value
       && all_spell_list[i].system.source
       && all_spell_list[i].system.source.value
-      && !all_spell_list[i].system.traits.value.includes("cantrip")
       ))
       continue;
     
@@ -268,7 +275,10 @@ $.getJSON("./json/P2ESpells.json", function(data) {
 
     switch (all_spell_list[i].system.level.value) {
       case 1:
-        spell_list_by_level[1].push(all_spell_list[i]);
+        if (all_spell_list[i].system.traits.value.includes("cantrip"))
+          spell_list_by_level[0].push(all_spell_list[i]);
+        else
+          spell_list_by_level[1].push(all_spell_list[i]);
         break;
       case 2:
         spell_list_by_level[2].push(all_spell_list[i]);
