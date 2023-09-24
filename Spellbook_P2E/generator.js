@@ -1,3 +1,6 @@
+
+var owned_spells;
+
 // this function takes input and randomly generates a
 // spellbook for the given class with maximum spell level
 // given in the input
@@ -13,6 +16,7 @@ var spellbook = function() {
   // number of spells known
   var max_level;	// integer for maximum level spell
   var spells_known = [];	// array for storing 
+  owned_spells = [{}];
   // spells of every level
   spells_known[0] = undefined;
   if (level >= 1 && level <= 20) {
@@ -47,7 +51,7 @@ var spellbook = function() {
           spells_known[i] += 2;
         if (income === 'wealthy')
           spells_known[i] += 1;
-        else if (income_level === 'poor')
+        else if (income === 'poor')
           spells_known[i] -= 1;
       }
       if (income === 'rich')
@@ -59,7 +63,6 @@ var spellbook = function() {
     // now, pick random spells from the json.
     // each spell must be for the correct class,
     // and for the correct level
-    var owned_spells;
     var school = $('#school').val().toLowerCase();
     var rarity = $('#rarity').val().toLowerCase();
     var sources = $('#sourcesButton').val();
@@ -81,60 +84,22 @@ var spellbook = function() {
         var quit = 0;
         while (!found) {
           curr_spell = randSpell(i);
-          var owned = false;
-          if (!owned_spells) {
-            owned_spells = [{}];
-          }
-          for (var key in owned_spells) {
-            if (owned_spells[key].name === curr_spell.name)
-              owned = true;
-          }
-          if (!owned) {
-            found = true;
-          }
 
-          // check if source is allowed
-          // curr_spell.system.source.value
+          found = validate_spell(curr_spell);
 
-          // check if rarity is allowed
-          switch (rarity) {
-            case "unique":
-              found = true;
-              break;
-            case "rare":
-              if (curr_spell.system.traits.rarity != "unique")
-                found = true;
-              else
+          if (found) {
+            if (school !== 'none') {
+              if (j < 2 && !curr_spell.system.traits.value.includes(school)) {
                 found = false;
-              break;
-            case "uncommon":
-              if (
-                curr_spell.system.traits.rarity == "uncommon"
-                || curr_spell.system.traits.rarity == "common"
-              )
-                found = true;
-              else
-                found = false;
-              break;
-            case "common":
-            default:
-              if (curr_spell.system.traits.rarity == "common")
-                found = true;
-              else
-                found = false;
-              break;
-          }
-
-          // Check if we need more spells of the requested school
-          if (school !== 'none') {
-            if (j < 2 && !curr_spell.system.traits.value.includes(school)) {
-              found = false;
+              }
             }
           }
           if (quit++ > 100)
             found = true;
+
           if (found)
             owned_spells.push(curr_spell);
+
         }
         strout += ""
           + "<div class='spell'>"
@@ -180,6 +145,54 @@ var randSpell = function(spell_level) {
       + "{\"level\": \"not\"},"
       + "{\"school\": \"loaded\"}]";
   }
+}
+
+var validate_spell = function(spell) {
+  var found = false;
+
+  // check if the spell is already in the list
+  if (!owned_spells) {
+    owned_spells = [{}];
+  }
+  for (var key in owned_spells) {
+    if (owned_spells[key].name === spell.name)
+      return false;
+  }
+
+  // check if source is allowed
+  // spell.system.source.value
+  // TODO: Source book checking here
+
+  // check if rarity is allowed
+  switch (rarity) {
+    case "unique":
+      found = true;
+      break;
+    case "rare":
+      if (spell.system.traits.rarity != "unique")
+        found = true;
+      else
+        return false;
+      break;
+    case "uncommon":
+      if (
+        spell.system.traits.rarity == "uncommon"
+        || spell.system.traits.rarity == "common"
+      )
+        found = true;
+      else
+        return false;
+      break;
+    case "common":
+    default:
+      if (spell.system.traits.rarity == "common")
+        found = true;
+      else
+        return false;
+      break;
+  }
+
+  return found;
 }
 
 $('#submit').on('click', function() {
