@@ -258,6 +258,7 @@ $.getJSON("./json/P2ESpells.json", function(data) {
       && all_spell_list[i].system.traits.value
       && all_spell_list[i].system.source
       && all_spell_list[i].system.source.value
+      && !all_spell_list[i].system.traits.value.includes("cantrip")
       ))
       continue;
     
