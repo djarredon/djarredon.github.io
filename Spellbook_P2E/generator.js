@@ -12,6 +12,7 @@ var spellbook = function() {
   // get level from input 
   var level = $('#class_level').val();
   var income = $('#wealth_level').val();
+  var include_cantrips = $('#include_cantrips')[0].checked;
   // maximum level spells known, minimum 
   // number of spells known
   var max_level;	// integer for maximum level spell
@@ -72,6 +73,8 @@ var spellbook = function() {
     strout += "<div class=\"row\">";
     for (var i = 0; i <= max_level; ++i) {
       if (i == 0) {
+        if (!include_cantrips)
+          continue;
         strout += "<div class=\"flex-item\" id=\"div" + i + "\">"
           + "<h3>Cantrips</h3>"
           ;        
