@@ -32,9 +32,9 @@ var spellbook = function() {
       else if (i == max_level)
         spells_known[i] = 2;
       if (i == 1 && level > 1)
-        spells_known[i] = 8;
+        spells_known[i] = 7;
       else if (i == 1)
-        spells_known[i] = 6;
+        spells_known[i] = 5;
       if (i > 1 && i < max_level)
         spells_known[i] = 4;
     }
@@ -49,15 +49,17 @@ var spellbook = function() {
       if (level % 2 == 0) {
         if (income === 'rich')
           spells_known[i] += 2;
-        if (income === 'wealthy')
+        else if (income === 'wealthy')
           spells_known[i] += 1;
         else if (income === 'poor')
           spells_known[i] -= 1;
       }
       if (income === 'rich')
         spells_known[i] += 2;
-      if (income === 'wealthy')
+      else if (income === 'wealthy')
         spells_known[i] += 1;
+      else if (income === 'poor')
+        spells_known[i] -= 1;
     }
 
     // now, pick random spells from the json.
